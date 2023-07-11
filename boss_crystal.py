@@ -1,6 +1,6 @@
 import pandas as pd
 
-crystal_prices = pd.read_csv("./crystal_prices.csv")
+crystal_prices = pd.read_csv("bossmule\crystal_prices.csv")
 
 class Crystal:
     def __init__(self, boss: str, mode: str, pt_size: int, time: int) -> None:

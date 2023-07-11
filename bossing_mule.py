@@ -5,6 +5,7 @@ class Bosser:
     clear_time = 0
     buff_freezers_used = 0
     ran = False
+    total_meso = 0
 
     def __init__(self, name: str, job: str, level: str) -> None:
         self.name = name
