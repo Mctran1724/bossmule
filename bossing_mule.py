@@ -7,10 +7,11 @@ class Bosser:
     ran = False
     total_meso = 0
 
-    def __init__(self, name: str, job: str, level: str) -> None:
+    def __init__(self, name: str, job: str, level: str, bosser_index: int) -> None:
         self.name = name
         self.job = job
         self.level = level
+        self.index = bosser_index
 
     def add_crystal(self, boss_name: str, boss_type: str, party_size: int, clear_time: int) -> None:
         crystal = Crystal(boss_name, boss_type, party_size, clear_time)
