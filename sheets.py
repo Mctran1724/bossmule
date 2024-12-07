@@ -8,7 +8,7 @@ def access_google_sheet(google_sheet_url: str, sheet_num: int = 0) -> pd.DataFra
         'https://www.googleapis.com/auth/drive'
     ]
 
-    creds_file = "/Users/michaeltran/Desktop/projects/maplestory/BossingMule/MS_sheets_credentials.json"
+    creds_file = "C:/Users/Micha/Desktop/Projects/personal/maplestory_calculators/bossing_calculator/bossmule/MS_sheets_credentials.json"
     creds = ServiceAccountCredentials.from_json_keyfile_name(creds_file, scope)
 
     client = gspread.authorize(creds)

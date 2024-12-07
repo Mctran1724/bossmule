@@ -9,16 +9,17 @@ crystal_prices_df = access_google_sheet(crystal_prices_url)
 class BossingMule:
     _max_crystals = 14
 
-    _bosses_run = [] #make this a min heap based on boss crystal values so that lower crystal prices get removed
-
-    _income = 0
-    _num_crystals = 0
-
     def __init__(self, name: str):
         self._name = name
-        
+        self._bosses_run = [] #make this a min heap based on boss crystal values so that lower crystal prices get removed
 
-    def add_crystal(self, boss: str, mode: str, party_size: int = 1) -> None:
+        self._income = 0
+        self._num_crystals = 0
+        
+    def __repr__(self):
+        return f"BossingMule {self._name}, {self._num_crystals} crystals for {self._income} mesos."
+
+    def add_crystal(self, boss: str, mode: str, party_size: int = 1) -> int:
         boss = boss.title()
         mode = mode.title()
         
@@ -43,14 +44,17 @@ class BossingMule:
             lowest_crystal = heapq.heappushpop(self._bosses_run, (crystal_value, mode, boss))
             self._income -= lowest_crystal[0]
             self._income += crystal_value
-            
-            print(f"Currently {self._name} sells 14 crystals. Adding {mode} {boss} and removing {lowest_crystal[1]} {lowest_crystal[2]}.")
-            print(f"Change in boss mule income: {crystal_value - lowest_crystal[0]}")
+            if lowest_crystal[2] == boss:
+                print(f"{self._name} sells 14 crystals of higher value. Will not add {lowest_crystal[2]}")
+            else:
+                print(f"Currently {self._name} sells 14 crystals. Replacing {lowest_crystal[1]} {lowest_crystal[2]} with {mode} {boss}")
+                print(f"Change in boss mule income: {crystal_value - lowest_crystal[0]}")
 
-        return
+        return crystal_value
     
     def remove_crystal(self, boss: str) -> None:
-        boss = boss.title()
+        boss = boss.title()            
+
         if boss in self.bosses_run():
             for i in range(self._num_crystals):
                 crystal_val, mode, boss_name = self._bosses_run[i]
@@ -59,6 +63,7 @@ class BossingMule:
                     del self._bosses_run[i]
                     heapq.heapify(self._bosses_run)
                     self._num_crystals -= 1
+                    self._income -= crystal_val
                     break
         else:
             print(f"Crystal for {boss} not currently being sold. Please choose one of {self.bosses_run()}")
@@ -74,25 +79,3 @@ class BossingMule:
     def bosses_run(self):
         bosses_run = self._bosses_run.copy()
         return [heapq.heappop(bosses_run)[-1] for _ in range(len(bosses_run))]
-
-
-if __name__ == "__main__":
-    hero = BossingMule("SecondDeaI")
-    hero.add_crystal("Kalos", "Normal", 1)
-    hero.add_crystal("Kaling", "Normal", 6)
-    hero.add_crystal("Verus Hilla", "Hard", 1)
-    hero.add_crystal("Darknell", "Hard", 1)
-    hero.add_crystal("Gloom", "Chaos", 1)
-    hero.add_crystal("Seren", "Hard", 1)
-    hero.add_crystal("Lotus", "Extreme", 2)
-    hero.add_crystal("Will", "Hard", 1)
-    hero.add_crystal("Lucid", "Hard", 1)
-    hero.add_crystal("Damien", "Hard", 1)
-    hero.add_crystal("Akechi", "Normal", 1)
-    hero.add_crystal("Slime", "Chaos", 1)
-    hero.add_crystal("Papulatus", "Chaos", 1)
-    hero.add_crystal("Vellum", "Chaos", 1)
-    hero.add_crystal("Magnus", "Hard", 1)
-    hero.remove_crystal("Akechi")
-    print(hero.bosses_run())
-    print(hero.income())
